@@ -5,7 +5,7 @@ import arraygen
 import csv
 from consolemenu import SelectionMenu
 
-def clear(self):
+def clear():
     if os.name == "posix": 
         subprocess.run(["clear"])
     else: 
@@ -26,9 +26,10 @@ def load_sorting_algorithms():
                 print(f"Invalid format in {filename}. Skipping this algorithm.")
     return sorting_algorithms
 
-def time_sorting_algorithm(sort_func, array, repetitions):
+def time_sorting_algorithm(sort_func, sort_name, arrays_to_sort):
     total_time = 0
-    for _ in range(repetitions):
+    for idx, array in enumerate(arrays_to_sort, start=1):
+        print(f"Testing {sort_name} on array #{idx}")
         start_time = time.perf_counter()
         try:
             sorted_array = sort_func(array.copy())
@@ -40,7 +41,7 @@ def time_sorting_algorithm(sort_func, array, repetitions):
             print(f"Warning: Sorting algorithm '{sort_func.__name__}' did not return a sorted array.")
             return None
         total_time += end_time - start_time
-    return total_time / repetitions
+    return total_time / len(arrays_to_sort)
 
 def generate_random_id():
     import Crypto.Random.random as random
@@ -61,8 +62,9 @@ def main():
         print("Invalid input. Please enter a positive integer.")
         return
     
-    types_of_random_array = ["Random sequential array", "Random array", "Randomize custom array", "Custom array"]
+    types_of_random_array = ["Random sequential array", "Random array", "Randomize custom array", "Custom array", "Mutiple test cases"]
     array_type_index = SelectionMenu.get_selection(types_of_random_array)
+    arrays_to_test = []
     
     match array_type_index:
         case 0:
@@ -74,7 +76,8 @@ def main():
                 top_number = int(input("Input top number (default 2048): "))
             except ValueError:
                 top_number = 2048
-            array_to_sort = arraygen.generate_random_sequenced_array(bottom_number, top_number)
+            for _ in range(repetitions):
+                arrays_to_test.append(arraygen.generate_random_sequenced_array(bottom_number, top_number))
         case 1:
             try:
                 array_size = int(input("Input array size (default 2048): "))
@@ -88,39 +91,119 @@ def main():
                 top_limit = int(input("Input top limit (default 2048): "))
             except ValueError:
                 top_limit = 2048
-            array_to_sort = arraygen.generate_random_array(array_size, bottom_limit, top_limit)
+            for _ in range(repetitions):
+                arrays_to_test.append(arraygen.generate_random_array(array_size, bottom_limit, top_limit))
         case 2:
             try:
                 custom_array = eval(input("""Enter custom array 
                                             (format: [1, 2, 3, 4, 2])
-                                            (default random [0...1024]): """))
+                                            (default random [0...1024])
+                                          
+                                          Input: """))
                 if not isinstance(custom_array, list):
                     raise ValueError("Input must be a list. Using default list.")
-                
+                for _ in range(repetitions):
+                    arrays_to_test.append(arraygen.array_randomizer(custom_array))
             except (ValueError, SyntaxError):
-                custom_array = arraygen.generate_random_sequenced_array(bottom_limit=0, top_limit=1024)
+                for _ in range(repetitions):
+                    arrays_to_test.append(arraygen.generate_random_sequenced_array(bottom_limit=0, top_limit=1024))
         case 3:
             try:
                 array_to_sort = eval(input("""Enter custom array
                                             (format: [1, 2, 3, 4, 2])
-                                            (default random [0...1024]: """))
+                                            (default random [0...1024])
+                                           
+                                           Input: """))
+                for _ in range(repetitions):
+                    arrays_to_test.append(array_to_sort)
                 if not isinstance(array_to_sort, list):
                     raise ValueError("Input must be a list. Using default list.")
 
             except (ValueError, SyntaxError):
-                array_to_sort = arraygen.generate_random_sequenced_array(bottom_limit=0, top_limit=1024)
-    
+                for _ in range(repetitions):
+                    arrays_to_test.append(arraygen.generate_random_sequenced_array(bottom_limit=0, top_limit=1024))
+        case 4:
+            del types_of_random_array[4]
+            array_type_index = SelectionMenu.get_selection(types_of_random_array)
+            
+            max_value = 8192
+            defaults = [256 * (2 ** i) if 256 * (2 ** i) < max_value else max_value for i in range(repetitions)]
+            match array_type_index:
+                case 0:
+                    for i in range(repetitions):
+                        try:
+                            lower_limit = int(input("Input bottom limit (default: 0): "))
+                        except ValueError:
+                            print("Invalid input for the lower limit. Using default value 0.")
+                            lower_limit = 0
+                        try:
+                            upper_limit = int(input(f"Input upper limit (default: {defaults[i]}): "))
+                        except (ValueError, IndexError):
+                            print(f"Invalid input for the upper limit or default index. Using default value {defaults[i]}.")
+                            upper_limit = defaults[i]
+                        arrays_to_test.append(arraygen.generate_random_sequenced_array(lower_limit, upper_limit))
+                case 1:
+                    for i in range(repetitions):
+                        try:
+                            array_size = int(input(f"Input array size (default: {defaults[i]}): "))
+                        except ValueError:
+                            print(f"Invalid input for the lower limit. Using default value {defaults[i]}.")
+                            array_size  = defaults[i]
+                        try:
+                            lower_limit = int(input("Input bottom limit (default: 0): "))
+                        except ValueError:
+                            print("Invalid input for the lower limit. Using default value 0.")
+                            lower_limit = 0
+                        try:
+                            upper_limit = int(input(f"Input upper limit (default: {defaults[i]}): "))
+                        except (ValueError, IndexError):
+                            print(f"Invalid input for the upper limit or default index. Using default value {defaults[i]}.")
+                            upper_limit = defaults[i]
+                        arrays_to_test.append(arraygen.generate_random_array(array_size, lower_limit, upper_limit))
+                case 2:
+                    for i in range(repetitions):
+                        try:
+                            custom_array = eval(input(f"""Enter custom array 
+                                                        (format: [1, 2, 3, 4, 2])
+                                                        (default random [0...{defaults[i]}])
+                                                        
+                                                        Input: """))
+                            if not isinstance(custom_array, list):
+                                raise ValueError("Input must be a list. Using default list.")
+                            arrays_to_test.append(arraygen.array_randomizer(custom_array))
+                        except (ValueError, SyntaxError):
+                                arrays_to_test.append(arraygen.generate_random_sequenced_array(0, defaults[i]))
+                case 3:
+                    for i in range(repetitions):
+                        try:
+                            array_to_sort = eval(input(f"""Enter custom array
+                                    (format: [1, 2, 3, 4, 2])
+                                    (default random [0...{defaults[i]}])
+                                    
+                                    Input: """))
+                            if not isinstance(array_to_sort, list):
+                                raise ValueError("Input must be a list. Using default list.")
+
+                        except (ValueError, SyntaxError):
+                            arrays_to_test.append(arraygen.generate_random_sequenced_array(bottom_limit=0, top_limit=1024))
+
+    clear()
+    print(f"Arrays:")
+    for idx, array in enumerate(arrays_to_test, start=1):
+        print(f"{idx})\n{array}\n\n")
     algorithm_times = []
     error_algorithms = []
     for algorithm in sorting_algorithms:
         algorithm_name = algorithm["name"]()
         sort_func = algorithm["sort"]
-        average_time = time_sorting_algorithm(sort_func, array_to_sort, repetitions)
-        if average_time is not None:
-            algorithm_times.append((algorithm_name, average_time))
+        print(f"Testing {algorithm_name}")
+        times = time_sorting_algorithm(sort_func, algorithm_name, arrays_to_test)
+        if times is not None:
+            algorithm_times.append((algorithm_name, times))
         else:
             print(f"{algorithm_name}: Error occurred during sorting.")
             error_algorithms.append(algorithm_name)
+        print("\n")
     
     sorted_algorithms = sorted(algorithm_times, key=lambda x: x[1])
 
@@ -145,8 +228,8 @@ def main():
     results_filename = os.path.join(results_folder, f"results-{next_number}-{random_id}.txt")
 
     with open(results_filename, "w") as results_file:
-        for algorithm_name, average_time in sorted_algorithms:
-            results_file.write(f"{algorithm_name}\n{average_time:.9f} seconds\n\n")
+        for algorithm_name, times in sorted_algorithms:
+            results_file.write(algorithm_name + "\n" + "\n".join([f"{time:.9f}" for time in times]) + " seconds\n\n")
         if error_algorithms:
             results_file.write(f"Errors: ")
             results_file.write(", ".join(error_algorithms))
