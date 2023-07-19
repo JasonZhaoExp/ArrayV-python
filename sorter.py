@@ -66,25 +66,49 @@ def main():
     
     match array_type_index:
         case 0:
-            bottom_number = int(input("Input bottom number (default 0): "))
-            top_number = int(input("Input top number (default 2048): "))
+            try:
+                bottom_number = int(input("Input bottom number (default 0): "))
+            except ValueError:
+                bottom_number = 0
+            try:
+                top_number = int(input("Input top number (default 2048): "))
+            except ValueError:
+                top_number = 2048
             array_to_sort = arraygen.generate_random_sequenced_array(bottom_number, top_number)
         case 1:
-            array_size = int(input("Input array size (default 2048): "))
-            bottom_limit = int(input("Input bottom limit (default 0): "))
-            top_limit = int(input("Input top limit (default 2048): "))
+            try:
+                array_size = int(input("Input array size (default 2048): "))
+            except ValueError:
+                array_size = 2048
+            try:
+                bottom_limit = int(input("Input bottom limit (default 0): "))
+            except ValueError:
+                bottom_limit = 0
+            try:
+                top_limit = int(input("Input top limit (default 2048): "))
+            except ValueError:
+                top_limit = 2048
             array_to_sort = arraygen.generate_random_array(array_size, bottom_limit, top_limit)
         case 2:
-            custom_array = eval(input("""Enter custom array 
-                                      (format: [1, 2, 3, 4, 2])
-                                      (default random [0...1024]: """))
-            array_to_sort = arraygen.array_randomizer(custom_array)
+            try:
+                custom_array = eval(input("""Enter custom array 
+                                            (format: [1, 2, 3, 4, 2])
+                                            (default random [0...1024]): """))
+                if not isinstance(custom_array, list):
+                    raise ValueError("Input must be a list. Using default list.")
+                
+            except (ValueError, SyntaxError):
+                custom_array = arraygen.generate_random_sequenced_array(bottom_limit=0, top_limit=1024)
         case 3:
-            array_to_sort = [a for a in range(0, 1024)]
-            array_to_sort = arraygen.array_randomizer(array_to_sort)
-            array_to_sort = eval(input("""Enter custom array
-                                       (format: [1, 2, 3, 4, 2])
-                                       (default random [0...1024]: """))
+            try:
+                array_to_sort = eval(input("""Enter custom array
+                                            (format: [1, 2, 3, 4, 2])
+                                            (default random [0...1024]: """))
+                if not isinstance(array_to_sort, list):
+                    raise ValueError("Input must be a list. Using default list.")
+
+            except (ValueError, SyntaxError):
+                array_to_sort = arraygen.generate_random_sequenced_array(bottom_limit=0, top_limit=1024)
     
     algorithm_times = []
     error_algorithms = []
@@ -100,7 +124,6 @@ def main():
     
     sorted_algorithms = sorted(algorithm_times, key=lambda x: x[1])
 
-    # Generate a random ID and get the current date and time
     random_id = generate_random_id()
     current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
 
@@ -108,7 +131,6 @@ def main():
     if not os.path.exists(results_folder):
         os.makedirs(results_folder)
 
-    # Save the current date and time along with the random ID to a CSV file
     csv_filename = os.path.join(results_folder, "results.csv")
     csv_exists = os.path.isfile(csv_filename)
 
