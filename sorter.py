@@ -27,26 +27,31 @@ def load_sorting_algorithms():
     return sorting_algorithms
 
 def time_sorting_algorithm(sort_func, sort_name, arrays_to_sort):
-    total_time = 0
+    times = []
     for idx, array in enumerate(arrays_to_sort, start=1):
         print(f"Testing {sort_name} on array #{idx}")
         start_time = time.perf_counter()
         try:
-            sorted_array = sort_func(array.copy())
+            sorted_array = sort_func(array)
         except Exception as e:
-            print(f"Error occurred during sorting with algorithm '{sort_func.__name__}': {e}")
+            print(f"Error occurred during sorting with algorithm '{sort_name}': {e}")
             return None
         end_time = time.perf_counter()
         if sorted_array is None or sorted_array != sorted(array):
-            print(f"Warning: Sorting algorithm '{sort_func.__name__}' did not return a sorted array.")
+            print(f"Warning: Sorting algorithm '{sort_name}' did not return a sorted array.")
             return None
-        total_time += end_time - start_time
-    return total_time / len(arrays_to_sort)
+        times.append(end_time - start_time)
+    return times
 
 def generate_random_id():
     import Crypto.Random.random as random
     import string
     return ''.join(random.sample(string.ascii_letters + string.digits, k=15))
+
+def time_now():
+    t = time.localtime()
+    current_time = time.strftime("%Y-%m-%d %H:%M:%S", t)
+    return current_time
 
 def main():
     sorting_algorithms = load_sorting_algorithms()
@@ -191,6 +196,7 @@ def main():
     print(f"Arrays:")
     for idx, array in enumerate(arrays_to_test, start=1):
         print(f"{idx})\n{array}\n\n")
+
     algorithm_times = []
     error_algorithms = []
     for algorithm in sorting_algorithms:
@@ -204,12 +210,15 @@ def main():
             print(f"{algorithm_name}: Error occurred during sorting.")
             error_algorithms.append(algorithm_name)
         print("\n")
-    
-    sorted_algorithms = sorted(algorithm_times, key=lambda x: x[1])
+
+    for idx, (algorithm_name, times) in enumerate(algorithm_times):
+        average_time = sum(times) / len(times)
+        algorithm_times[idx] = (algorithm_name, times, average_time)
+
+    sorted_algorithms = sorted(algorithm_times, key=lambda x: x[2])
 
     random_id = generate_random_id()
-    current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-
+    current_time = time_now()
     results_folder = "results"
     if not os.path.exists(results_folder):
         os.makedirs(results_folder)
@@ -228,13 +237,17 @@ def main():
     results_filename = os.path.join(results_folder, f"results-{next_number}-{random_id}.txt")
 
     with open(results_filename, "w") as results_file:
-        for algorithm_name, times in sorted_algorithms:
-            results_file.write(algorithm_name + "\n" + "\n".join([f"{time:.9f}" for time in times]) + " seconds\n\n")
+        for algorithm_name, times, average_time in sorted_algorithms:
+            results_file.write(f"{algorithm_name}\n\n")
+            for count, time in enumerate(times):
+                results_file.write(f"Array #{count+1}: {time:.9f} seconds\n")
+            results_file.write(f"Average time: {average_time:.9f} seconds\n\n\n")
         if error_algorithms:
             results_file.write(f"Errors: ")
             results_file.write(", ".join(error_algorithms))
 
     print(f"Results saved to {results_filename}")
+
 
 if __name__ == "__main__":
     main()
