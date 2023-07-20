@@ -265,8 +265,11 @@ def main():
             if error_algorithms:
                 results_file.write(f"Errors: ")
                 results_file.write(", ".join(error_algorithms))
+                average_file.write(f"Errors: ")
+                average_file.write(", ".join(error_algorithms))
             for count, array in enumerate(arrays_to_test):
                 results_file.write(f"Array #{count+1}:\n\nLength: {len(array)}\n\n{array}\n\n\n\n\n")
+                average_file.write(f"Array #{count+1}:{len(array)} items\n\n")
 
     print(f"Results saved to {results_filename}")
     program_runtime_end = perf_counter()
