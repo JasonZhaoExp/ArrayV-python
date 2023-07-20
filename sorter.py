@@ -53,6 +53,10 @@ def time_now():
     current_time = time.strftime("%Y-%m-%d %H:%M:%S", t)
     return current_time
 
+def perf_counter():
+    t = time.perf_counter()
+    return t
+
 def main():
     sorting_algorithms = load_sorting_algorithms()
     if not sorting_algorithms:
@@ -129,6 +133,7 @@ def main():
                     arrays_to_test.append(arraygen.generate_random_sequenced_array(bottom_limit=0, top_limit=1024))
         case 4:
             del types_of_random_array[4]
+            types_of_random_array.append("Same limit random sequential")
             array_type_index = SelectionMenu.get_selection(types_of_random_array)
             
             max_value = 8192
@@ -191,8 +196,20 @@ def main():
 
                         except (ValueError, SyntaxError):
                             arrays_to_test.append(arraygen.generate_random_sequenced_array(bottom_limit=0, top_limit=1024))
+                case 4:
+                    try:
+                        lower_limit = int(input("Input lower limit (default 0): "))
+                    except ValueError:
+                        lower_limit = 0
+                    try:
+                        upper_limit = int(input("Input upper limit (default 2048): "))
+                    except ValueError:
+                        upper_limit = 2048
+                    for _ in range(repetitions):
+                        arrays_to_test.append(arraygen.generate_random_sequenced_array(lower_limit, upper_limit))
 
     clear()
+    program_runtime_start = perf_counter()
     print(f"Arrays:")
     for idx, array in enumerate(arrays_to_test, start=1):
         print(f"{idx})\n{array}\n\n")
@@ -235,18 +252,26 @@ def main():
     existing_files = [filename for filename in os.listdir(results_folder) if filename.startswith("results-")]
     next_number = len(existing_files) + 1
     results_filename = os.path.join(results_folder, f"results-{next_number}-{random_id}.txt")
+    average_filename = os.path.join(f"{results_filename[:-4]}-averages.txt")
 
     with open(results_filename, "w") as results_file:
-        for algorithm_name, times, average_time in sorted_algorithms:
-            results_file.write(f"{algorithm_name}\n\n")
-            for count, time in enumerate(times):
-                results_file.write(f"Array #{count+1}: {time:.9f} seconds\n")
-            results_file.write(f"Average time: {average_time:.9f} seconds\n\n\n")
-        if error_algorithms:
-            results_file.write(f"Errors: ")
-            results_file.write(", ".join(error_algorithms))
+        with open(average_filename, "w") as average_file:
+            for algorithm_name, times, average_time in sorted_algorithms:
+                results_file.write(f"{algorithm_name}\n\n")
+                average_file.write(f"{algorithm_name}\n")
+                for count, time in enumerate(times):
+                    results_file.write(f"Array #{count+1}: {time:.9f} seconds\n")
+                average_file.write(f"Average time: {average_time:.9f} seconds\n\n")
+            if error_algorithms:
+                results_file.write(f"Errors: ")
+                results_file.write(", ".join(error_algorithms))
+            for count, array in enumerate(arrays_to_test):
+                results_file.write(f"Array #{count+1}:\n\nLength: {len(array)}\n\n{array}\n\n\n\n\n")
 
     print(f"Results saved to {results_filename}")
+    program_runtime_end = perf_counter()
+    program_runtime = program_runtime_end - program_runtime_start
+    print(f"Program runtime: {program_runtime}")
 
 
 if __name__ == "__main__":
