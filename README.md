@@ -16,7 +16,6 @@
 - Radix sort
 - Selection sort
 - Shell sort
-- Stooge sort
 - Strand sort
 - Tim sort
 
