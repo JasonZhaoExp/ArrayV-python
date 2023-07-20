@@ -38,7 +38,7 @@ def time_sorting_algorithm(sort_func, sort_name, arrays_to_sort):
             print(f"Error occurred during sorting with algorithm '{sort_name}': {e}")
             return None
         end_time = time.perf_counter()
-        if sorted_array is None or sorted_array != sorted(array):
+        if sorted_array is None or sorted_array != sorted(array_to_sort):
             print(f"Warning: Sorting algorithm '{sort_name}' did not return a sorted array.")
             return None
         times.append(end_time - start_time)
@@ -194,6 +194,7 @@ def main():
                                     Input: """))
                             if not isinstance(array_to_sort, list):
                                 raise ValueError("Input must be a list. Using default list.")
+                            arrays_to_test.append(array_to_sort)
 
                         except (ValueError, SyntaxError):
                             arrays_to_test.append(arraygen.generate_random_sequenced_array(bottom_limit=0, top_limit=1024))
@@ -221,7 +222,7 @@ def main():
         algorithm_name = algorithm["name"]()
         sort_func = algorithm["sort"]
         print(f"Testing {algorithm_name}")
-        times = time_sorting_algorithm(sort_func, algorithm_name, arrays_to_test)
+        times = time_sorting_algorithm(sort_func, algorithm_name, arrays_to_test.copy())
         if times is not None:
             algorithm_times.append((algorithm_name, times))
         else:
