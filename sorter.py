@@ -30,9 +30,10 @@ def time_sorting_algorithm(sort_func, sort_name, arrays_to_sort):
     times = []
     for idx, array in enumerate(arrays_to_sort, start=1):
         print(f"Testing {sort_name} on array #{idx}")
+        array_to_sort = array
         start_time = time.perf_counter()
         try:
-            sorted_array = sort_func(array)
+            sorted_array = sort_func(array_to_sort)
         except Exception as e:
             print(f"Error occurred during sorting with algorithm '{sort_name}': {e}")
             return None
@@ -249,7 +250,7 @@ def main():
             csv_writer.writerow(["RandomID", "DateTime"])
         csv_writer.writerow([random_id, current_time])
 
-    existing_files = [filename for filename in os.listdir(results_folder) if filename.startswith("results-")]
+    existing_files = [filename for filename in os.listdir(results_folder) if filename.endswith("-averages.txt")]
     next_number = len(existing_files) + 1
     results_filename = os.path.join(results_folder, f"results-{next_number}-{random_id}.txt")
     average_filename = os.path.join(f"{results_filename[:-4]}-averages.txt")
@@ -267,6 +268,7 @@ def main():
                 results_file.write(", ".join(error_algorithms))
                 average_file.write(f"Errors: ")
                 average_file.write(", ".join(error_algorithms))
+                average_file.write("\n\n")
             for count, array in enumerate(arrays_to_test):
                 results_file.write(f"Array #{count+1}:\n\nLength: {len(array)}\n\n{array}\n\n\n\n\n")
                 average_file.write(f"Array #{count+1}:{len(array)} items\n\n")
