@@ -1,9 +1,46 @@
+"""
+
+    ArrayV Python - Python program to visualise sorting algorithms
+    Copyright (C) 2023  Jason Zhao
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+"""
+
 import os
 import time
 import subprocess
-import arraygen
 import csv
-from consolemenu import SelectionMenu
+import copy
+import termcolor, pyfiglet
+
+import arraygen
+
+def get_selection(choices, default_index, title=None, subtitle=None, title_color="green"):
+    clear()
+    if title is not None:
+        print(termcolor.colored(pyfiglet.figlet_format(title), title_color.lower()))
+    if subtitle is not None:
+        print(f"{subtitle}\n")
+    for idx, value in enumerate(choices):
+        print(f"{idx+1}: {value}")
+    try:
+        choice_index = int(input(f"\nChoice (default {default_index+1}): "))-1
+    except ValueError:
+        choice_index = default_index
+    clear()
+    return choice_index
 
 def clear():
     if os.name == "posix": 
@@ -26,21 +63,22 @@ def load_sorting_algorithms():
                 print(f"Invalid format in {filename}. Skipping this algorithm.")
     return sorting_algorithms
 
-def time_sorting_algorithm(sort_func, sort_name, arrays_to_sort):
+def time_sorting_algorithm(sort_func, sort_name, arrays_to_sort_copy):
     times = []
-    for idx, array in enumerate(arrays_to_sort, start=1):
+    for idx, array_to_sort in enumerate(arrays_to_sort_copy, start=1):
         print(f"Testing {sort_name} on array #{idx}")
-        array_to_sort = array
         start_time = time.perf_counter()
         try:
             sorted_array = sort_func(array_to_sort)
         except Exception as e:
+            error_string = f"Error: {e}"
             print(f"Error occurred during sorting with algorithm '{sort_name}': {e}")
-            return None
+            return error_string
         end_time = time.perf_counter()
         if sorted_array is None or sorted_array != sorted(array_to_sort):
-            print(f"Warning: Sorting algorithm '{sort_name}' did not return a sorted array.")
-            return None
+            error_string = "Error: did not return a sorted array"
+            print(f"Error occurred during sorting with algorithm '{sort_name}': did not return a sorted array")
+            return error_string
         times.append(end_time - start_time)
     return times
 
@@ -64,16 +102,16 @@ def main():
         print("No valid sorting algorithms found in the 'sorts' folder.")
         return
     try:
-        repetitions = int(input("Enter the number of times to repeat each sorting algorithm: "))
+        repetitions = int(input("Enter the number of times to repeat each sorting algorithm (default 10): "))
         if repetitions <= 0:
-            print("Please enter a positive integer for repetitions.")
-            return
+            raise ValueError
     except ValueError:
-        print("Invalid input. Please enter a positive integer.")
-        return
+        print("Invalid input. Please enter a positive integer. Using default of 10.")
+        repetitions = 10
+        input("Press enter to continue...")
     
     types_of_random_array = ["Random sequential array", "Random array", "Randomize custom array", "Custom array", "Mutiple test cases"]
-    array_type_index = SelectionMenu.get_selection(types_of_random_array)
+    array_type_index = get_selection(types_of_random_array, 4)
     arrays_to_test = []
     
     match array_type_index:
@@ -135,7 +173,7 @@ def main():
         case 4:
             del types_of_random_array[4]
             types_of_random_array.append("Same limit random sequential")
-            array_type_index = SelectionMenu.get_selection(types_of_random_array)
+            array_type_index = get_selection(types_of_random_array, 4)
             
             max_value = 8192
             defaults = [256 * (2 ** i) if 256 * (2 ** i) < max_value else max_value for i in range(repetitions)]
@@ -197,7 +235,7 @@ def main():
                             arrays_to_test.append(array_to_sort)
 
                         except (ValueError, SyntaxError):
-                            arrays_to_test.append(arraygen.generate_random_sequenced_array(bottom_limit=0, top_limit=1024))
+                            arrays_to_test.append(arraygen.generate_random_sequenced_array(bottom_limit=0, top_limit=defaults[i]))
                 case 4:
                     try:
                         lower_limit = int(input("Input lower limit (default 0): "))
@@ -215,19 +253,24 @@ def main():
     print(f"Arrays:")
     for idx, array in enumerate(arrays_to_test, start=1):
         print(f"{idx})\n{array}\n\n")
-
     algorithm_times = []
     error_algorithms = []
     for algorithm in sorting_algorithms:
         algorithm_name = algorithm["name"]()
         sort_func = algorithm["sort"]
+        arrays_to_test_copy = copy.deepcopy(arrays_to_test)
         print(f"Testing {algorithm_name}")
-        times = time_sorting_algorithm(sort_func, algorithm_name, arrays_to_test.copy())
-        if times is not None:
+        times = time_sorting_algorithm(sort_func, algorithm_name, arrays_to_test_copy)
+        if isinstance(times, str):
+            if times.startswith("Error: "):
+                error_algorithms.append((algorithm_name, times[7:]))
+            else:
+                pass
+        elif isinstance(times, list):
             algorithm_times.append((algorithm_name, times))
         else:
             print(f"{algorithm_name}: Error occurred during sorting.")
-            error_algorithms.append(algorithm_name)
+            error_algorithms.append((algorithm_name, "Something went really wrong"))
         print("\n")
 
     for idx, (algorithm_name, times) in enumerate(algorithm_times):
@@ -257,22 +300,31 @@ def main():
     average_filename = os.path.join(f"{results_filename[:-4]}-averages.txt")
 
     with open(results_filename, "w") as results_file:
-        with open(average_filename, "w") as average_file:
-            for algorithm_name, times, average_time in sorted_algorithms:
-                results_file.write(f"{algorithm_name}\n\n")
-                average_file.write(f"{algorithm_name}\n")
-                for count, time in enumerate(times):
-                    results_file.write(f"Array #{count+1}: {time:.9f} seconds\n")
-                average_file.write(f"Average time: {average_time:.9f} seconds\n\n")
-            if error_algorithms:
-                results_file.write(f"Errors: ")
-                results_file.write(", ".join(error_algorithms))
-                average_file.write(f"Errors: ")
-                average_file.write(", ".join(error_algorithms))
-                average_file.write("\n\n")
-            for count, array in enumerate(arrays_to_test):
-                results_file.write(f"Array #{count+1}:\n\nLength: {len(array)}\n\n{array}\n\n\n\n\n")
-                average_file.write(f"Array #{count+1}:{len(array)} items\n\n")
+        for algorithm_name, times, average_time in sorted_algorithms:
+            results_file.write(f"{algorithm_name}\n")
+            for count, time in enumerate(times):
+                results_file.write(f"Array #{count+1}: {time:.9f} seconds\n")
+            results_file.write("\n")
+        results_file.write("\n")
+        if error_algorithms:
+            results_file.write(f"Errors:\n\n")
+            for algorithm_name, error in error_algorithms:
+                results_file.write(f"{algorithm_name}: {error}\n")
+            results_file.write("\n\n\n")
+        for count, array in enumerate(arrays_to_test):
+            results_file.write(f"Array #{count+1}:\nLength: {len(array)}\n\n{array}\n\n\n\n")
+
+    with open(average_filename, "w") as average_file:
+        for algorithm_name, times, average_time in sorted_algorithms:
+            average_file.write(f"{algorithm_name}\n")
+            average_file.write(f"Average time: {average_time:.9f} seconds\n\n")
+        if error_algorithms:
+            error_names = [algorithm[0] for algorithm in error_algorithms]
+            average_file.write(f"Errors: ")
+            average_file.write(", ".join(error_names))
+            average_file.write("\n\n")
+        for count, array in enumerate(arrays_to_test):
+                average_file.write(f"Array #{count+1}: {len(array)} items\n")
 
     print(f"Results saved to {results_filename}")
     program_runtime_end = perf_counter()
