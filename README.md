@@ -24,7 +24,7 @@
 2. Run `python sorter.py`
 
 ## To-Do List:
-- Implement more sorts
-- Add GUI
-- Add settings
-- Add visualization
+- [] Implement more sorts
+- [] Add GUI
+- [] Add settings
+- [] Add visualization
