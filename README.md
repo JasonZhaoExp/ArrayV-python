@@ -12,12 +12,12 @@
 - Merge sort
 - Odd even sort
 - Pancake sort
-- Quick sort
+- Quicksort
 - Radix sort
 - Selection sort
 - Shell sort
 - Strand sort
-- Tim sort
+- Timsort
 
 ## Instructions:
 1. Run `pip install -r requirements.txt`
