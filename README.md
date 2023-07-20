@@ -28,3 +28,4 @@
 - [ ] Add GUI
 - [ ] Add settings
 - [ ] Add visualization
+- [ ] Fix bugs
