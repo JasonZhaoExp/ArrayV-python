@@ -1,0 +1,35 @@
+# Sorting algorithms
+- Bead sort
+- Binary insertion sort
+- Bubble sort
+- Bucket sort
+- Circle sort
+- Cocktail shaker sort
+- Comb sort
+- Counting sort
+- Cycle sort
+- Double sort
+- Dutch national flag sort
+- Exchange sort
+- Gnome sort
+- Heap sort
+- Insertion sort
+- Introspective sort
+- Iterative merge sort
+- MSD radix sort
+- Merge sort
+- Merge-insertion sort
+- Odd-even sort
+- Optimised shell sort
+- Pancake sort
+- Patience sort
+- Pigeon hole sort
+- Quicksort
+- Radix sort
+- Recursive merge sort
+- Recursive quicksort
+- Selection sort
+- Shell sort
+- Strand sort
+- Timsort
+- Tree sort
