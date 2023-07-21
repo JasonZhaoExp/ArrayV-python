@@ -1,21 +1,24 @@
 def name():
     return "Comb sort"
 
-def sort(data: list) -> list:
-    shrink_factor = 1.3
-    gap = len(data)
-    completed = False
+def getNextGap(gap):
+	gap = (gap * 10)//13
+	if gap < 1:
+		return 1
+	return gap
 
-    while not completed:
-        gap = int(gap / shrink_factor)
-        if gap <= 1:
-            completed = True
+def inPlace_combSort(arr):
+	n = len(arr)
+	gap = n
+	swapped = True
+	while gap !=1 or swapped == 1:
+		gap = getNextGap(gap)
+		swapped = False
+		for i in range(0, n-gap):
+			if arr[i] > arr[i + gap]:
+				arr[i], arr[i + gap]=arr[i + gap], arr[i]
+				swapped = True
 
-        index = 0
-        while index + gap < len(data):
-            if data[index] > data[index + gap]:
-                data[index], data[index + gap] = data[index + gap], data[index]
-                completed = False
-            index += 1
-
-    return data
+def sort(array):
+	inPlace_combSort(array)
+	return array
