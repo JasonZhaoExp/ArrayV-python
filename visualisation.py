@@ -19,7 +19,6 @@
 """
 
 import pygame
-import Crypto.Random.random as random
 
 MAX_NUM = 24
 def scale_point(point, window_size, zoom_level):
