@@ -6,6 +6,7 @@
 
 ## To-Do List:
 - [x] Implement more sorts
+- [ ] Add documentation
 - [ ] Add GUI
 - [ ] Add settings
 - [ ] Add visualization
