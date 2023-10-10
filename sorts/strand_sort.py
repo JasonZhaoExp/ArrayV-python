@@ -1,28 +1,37 @@
 def name():
     return "Strand sort"
 
-import operator
+def merge_sorted_lists(list1, list2):
+    merged_list = []
+    i = j = 0
 
-def sort(arr: list, reverse: bool = False, solution: list | None = None) -> list:
-    _operator = operator.lt if reverse else operator.gt
-    solution = solution or []
-    if not arr:
-        return solution
-    sublist = [arr.pop(0)]
-    for i, item in enumerate(arr):
-        if _operator(item, sublist[-1]):
-            sublist.append(item)
-            arr.pop(i)
-    if not solution:
-        solution.extend(sublist)
-    else:
-        while sublist:
-            item = sublist.pop(0)
-            for i, xx in enumerate(solution):
-                if not _operator(item, xx):
-                    solution.insert(i, item)
-                    break
-            else:
-                solution.append(item)
-    sort(arr, reverse, solution)
-    return solution
+    while i < len(list1) and j < len(list2):
+        if list1[i] < list2[j]:
+            merged_list.append(list1[i])
+            i += 1
+        else:
+            merged_list.append(list2[j])
+            j += 1
+
+    merged_list.extend(list1[i:])
+    merged_list.extend(list2[j:])
+    return merged_list
+
+
+def sort(arr):
+    if len(arr) <= 1:
+        return arr
+
+    sorted_list = []
+    sublist = [arr[0]]
+
+    for i in range(1, len(arr)):
+        if arr[i] >= arr[i - 1]:
+            sublist.append(arr[i])
+        else:
+            sorted_list = merge_sorted_lists(sorted_list, sublist)
+            sublist = [arr[i]]
+
+    sorted_list = merge_sorted_lists(sorted_list, sublist)
+
+    return sorted_list
