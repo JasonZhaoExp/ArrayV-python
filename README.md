@@ -18,7 +18,7 @@
 - Array generation, sorting algorithm tester and visualisation written by Jason Zhao (me)
 
 ## Algorithms added:
-[List of algorithms](./wiki/SORTS.md)
+[List of algorithms](/wiki/SORTS.md)
 
 ## License
 ArrayV Python is licensed under the [GNU General Public License version 3.0](./COPYING) (Copyright 2023 Jason Zhao)
