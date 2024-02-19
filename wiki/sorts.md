@@ -1,33 +1,36 @@
 # Sorting algorithms
-- Bead sort
-- Binary insertion sort
-- Bubble sort
-- Bucket sort
-- Circle sort
-- Cocktail shaker sort
-- Comb sort
-- Counting sort
-- Cycle sort
-- Double sort
-- Exchange sort
-- Gnome sort
-- Heap sort
-- Insertion sort
-- Introspective sort
-- Iterative merge sort
-- MSD radix sort
-- Merge sort
-- Merge-insertion sort
-- Odd-even sort
-- Optimised shell sort
-- Pancake sort
-- Pigeon hole sort
-- Quicksort
-- Radix sort
-- Recursive merge sort
-- Recursive quicksort
-- Selection sort
-- Shell sort
-- Strand sort
-- Timsort
-- Tree sort
+
+- [Bead sort](https://github.com/JasonZhaoExp/ArrayV-python/blob/main/sorts/bead_sort.py)
+- [Binary insertion sort](https://github.com/JasonZhaoExp/ArrayV-python/blob/main/sorts/binary_insertion_sort.py)
+- [Bubble sort](https://github.com/JasonZhaoExp/ArrayV-python/blob/main/sorts/bubble_sort.py)
+- [Bucket sort](https://github.com/JasonZhaoExp/ArrayV-python/blob/main/sorts/bucket_sort.py)
+- [Circle sort](https://github.com/JasonZhaoExp/ArrayV-python/blob/main/sorts/circle_sort.py)
+- [Cocktail shaker sort](https://github.com/JasonZhaoExp/ArrayV-python/blob/main/sorts/cocktail_shaker_sort.py)
+- [Comb sort](https://github.com/JasonZhaoExp/ArrayV-python/blob/main/sorts/comb_sort.py)
+- [Counting sort](https://github.com/JasonZhaoExp/ArrayV-python/blob/main/sorts/counting_sort.py)
+- [Cycle sort](https://github.com/JasonZhaoExp/ArrayV-python/blob/main/sorts/cycle_sort.py)
+- [Double sort](https://github.com/JasonZhaoExp/ArrayV-python/blob/main/sorts/double_sort.py)
+- [Dutch national flag sort](https://github.com/JasonZhaoExp/ArrayV-python/blob/main/sorts/double_sort.py)
+- [Exchange sort](https://github.com/JasonZhaoExp/ArrayV-python/blob/main/sorts/exchange_sort.py)
+- [Gnome sort](https://github.com/JasonZhaoExp/ArrayV-python/blob/main/sorts/gnome_sort.py)
+- [Heap sort](https://github.com/JasonZhaoExp/ArrayV-python/blob/main/sorts/heap_sort.py)
+- [Insertion sort](https://github.com/JasonZhaoExp/ArrayV-python/blob/main/sorts/insertion_sort.py)
+- [Introspective sort](https://github.com/JasonZhaoExp/ArrayV-python/blob/main/sorts/intro_sort.py)
+- [Iterative merge sort](https://github.com/JasonZhaoExp/ArrayV-python/blob/main/sorts/iterative_merge_sort.py)
+- [Merge sort](https://github.com/JasonZhaoExp/ArrayV-python/blob/main/sorts/merge_sort.py)
+- [Merge-insertion sort](https://github.com/JasonZhaoExp/ArrayV-python/blob/main/sorts/merge_insertion_sort.py)
+- [MSD radix sort](https://github.com/JasonZhaoExp/ArrayV-python/blob/main/sorts/msd_radix_sort.py)
+- [Odd-even sort](https://github.com/JasonZhaoExp/ArrayV-python/blob/main/sorts/odd_even_sort.py)
+- [Optimised shell sort](https://github.com/JasonZhaoExp/ArrayV-python/blob/main/sorts/shrink_shell_sort.py)
+- [Pancake sort](https://github.com/JasonZhaoExp/ArrayV-python/blob/main/sorts/pancake_sort.py)
+- [Patience sort](https://github.com/JasonZhaoExp/ArrayV-python/blob/main/sorts/patience_sort.py)
+- [Pigeon hole sort](https://github.com/JasonZhaoExp/ArrayV-python/blob/main/sorts/pigeon_sort.py)
+- [Quicksort](https://github.com/JasonZhaoExp/ArrayV-python/blob/main/sorts/quick_sort.py)
+- [Radix sort](https://github.com/JasonZhaoExp/ArrayV-python/blob/main/sorts/radix_sort.py)
+- [Recursive merge sort](https://github.com/JasonZhaoExp/ArrayV-python/blob/main/sorts/recursive_mergesort_array.py)
+- [Recursive quicksort](https://github.com/JasonZhaoExp/ArrayV-python/blob/main/sorts/recursive_quick_sort.py)
+- [Selection sort](https://github.com/JasonZhaoExp/ArrayV-python/blob/main/sorts/selection_sort.py)
+- [Shell sort](https://github.com/JasonZhaoExp/ArrayV-python/blob/main/sorts/shell_sort.py)
+- [Strand sort](https://github.com/JasonZhaoExp/ArrayV-python/blob/main/sorts/strand_sort.py)
+- [Timsort](https://github.com/JasonZhaoExp/ArrayV-python/blob/main/sorts/tim_sort.py)
+- [Tree sort](https://github.com/JasonZhaoExp/ArrayV-python/blob/main/sorts/tree_sort.py)
