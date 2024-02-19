@@ -9,7 +9,6 @@
 - Counting sort
 - Cycle sort
 - Double sort
-- Dutch national flag sort
 - Exchange sort
 - Gnome sort
 - Heap sort
@@ -22,7 +21,6 @@
 - Odd-even sort
 - Optimised shell sort
 - Pancake sort
-- Patience sort
 - Pigeon hole sort
 - Quicksort
 - Radix sort

@@ -1,14 +1,14 @@
 def name():
     return "Bubble sort"
 
-def sort(collection):
-    length = len(collection)
+def sort(arr):
+    length = len(arr)
     for i in range(length - 1):
         swapped = False
         for j in range(length - 1 - i):
-            if collection[j] > collection[j + 1]:
+            if arr[j] > arr[j + 1]:
                 swapped = True
-                collection[j], collection[j + 1] = collection[j + 1], collection[j]
+                arr[j], arr[j + 1] = arr[j + 1], arr[j]
         if not swapped:
             break
-    return collection
+    return arr

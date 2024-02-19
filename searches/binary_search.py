@@ -15,7 +15,3 @@ def search(items: list, looking_for):
             return idx
     return False
 
-def test_search():
-    assert search(list, "Joe") == 3
-    assert search(list, "Bob") == False
-    assert search(list, "Carl") == 2

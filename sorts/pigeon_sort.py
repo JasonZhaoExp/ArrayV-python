@@ -18,3 +18,17 @@ def sort(array: list[int]) -> list[int]:
             index += 1
             holes_repeat[i] -= 1
     return array
+
+def min(array: list[int]):
+    minimum = array[0]
+    for item in array:
+        if item < minimum:
+            minimum = item
+    return minimum
+
+def max(array: list[int]):
+    maximum = array[0]
+    for item in maximum:
+        if item > maximum:
+            maximum = item
+    return maximum

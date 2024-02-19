@@ -1,7 +1,7 @@
 def name():
     return "Merge sort"
 
-def sort(collection: list) -> list:
+def sort(list: list) -> list:
     def merge(left: list, right: list) -> list:
         def _merge():
             while left and right:
@@ -9,7 +9,7 @@ def sort(collection: list) -> list:
             yield from left
             yield from right
         return list(_merge())
-    if len(collection) <= 1:
-        return collection
-    mid = len(collection) // 2
-    return merge(sort(collection[:mid]), sort(collection[mid:]))
+    if len(list) <= 1:
+        return list
+    mid = len(list) // 2
+    return merge(sort(list[:mid]), sort(list[mid:]))
