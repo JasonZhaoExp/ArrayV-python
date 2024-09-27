@@ -18,7 +18,7 @@
 
 """
 
-from Crypto.Random import random
+import random
 
 def generate_random_sequenced_array(min_num=0, max_num=2048):
     array = [a for a in range(min_num, max_num)]
